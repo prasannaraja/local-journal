@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <h1>Journal</h1>
+        <nav>
+            <button class="tab active" data-tab="dump">Brain Dump</button>
+            <button class="tab" data-tab="search">Search</button>
+            <button class="tab" data-tab="browse">Browse</button>
+        </nav>
+        <div id="health-status" class="health"></div>
+    </header>
+
+    <main>
+        <!-- Brain Dump Tab -->
+        <section id="tab-dump" class="tab-content active">
+            <!-- Phase 1: Raw dump input -->
+            <div id="dump-input">
+                <p class="hint">Write down whatever's on your mind. Don't worry about structure or grammar.</p>
+                <textarea id="raw-dump" placeholder="Start typing your thoughts..." rows="8"></textarea>
+                <button id="btn-start" class="primary">Start</button>
+            </div>
+
+            <!-- Phase 2: Dialogue -->
+            <div id="dump-chat" class="hidden">
+                <div id="chat-messages"></div>
+                <div class="chat-input-row">
+                    <input type="text" id="chat-reply" placeholder="Your reply...">
+                    <button id="btn-reply" class="primary">Send</button>
+                    <button id="btn-done" class="secondary">I'm done</button>
+                </div>
+            </div>
+
+            <!-- Phase 3: Polished entry review -->
+            <div id="dump-review" class="hidden">
+                <h3>Your Polished Entry</h3>
+                <div id="polished-preview" class="entry-preview"></div>
+                <textarea id="polished-edit" rows="10" class="hidden"></textarea>
+                <div class="review-actions">
+                    <button id="btn-edit-toggle" class="secondary">Edit</button>
+                    <button id="btn-save" class="primary">Save Entry</button>
+                    <button id="btn-new" class="secondary">Start Over</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Tab -->
+        <section id="tab-search" class="tab-content hidden">
+            <div class="search-bar">
+                <input type="text" id="search-query" placeholder="Ask about your past entries...">
+                <button id="btn-search" class="primary">Search</button>
+            </div>
+            <div id="search-results" class="hidden">
+                <div id="search-refs"></div>
+                <div id="search-answer"></div>
+            </div>
+        </section>
+
+        <!-- Browse Tab -->
+        <section id="tab-browse" class="tab-content hidden">
+            <div id="entries-list"></div>
+            <div id="entry-detail" class="hidden"></div>
+        </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
