@@ -38,7 +38,7 @@ A personal journaling app powered by a local LLM. Write a brain dump, have an AI
 
 ```bash
 # Clone the repo
-git clone https://github.com/superS007/localllmjournal.git
+git clone https://github.com/prasannaraja/local-journal.git
 cd localllmjournal
 
 # Create the conda environment
