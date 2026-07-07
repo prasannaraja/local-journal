@@ -1,5 +1,4 @@
 from pathlib import Path
-import os
 
 # Paths
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,7 +11,6 @@ CHROMA_DIR = DATA_DIR / "chroma"
 # Ollama models
 CHAT_MODEL = "llama3.2:3b"
 EMBED_MODEL = "nomic-embed-text"
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 
 # ChromaDB
 CHROMA_COLLECTION = "journal_entries"
