@@ -55,6 +55,41 @@ python -m journal.app
 
 Open http://localhost:8000 in your browser.
 
+## Run With Docker (Ollama Outside Container)
+
+You can run this app in Docker while keeping Ollama on your host machine.
+
+### Prerequisites
+
+- Docker Desktop (or Docker Engine + Compose)
+- Ollama running on host (`ollama serve`)
+- Required models pulled on host:
+
+```bash
+ollama pull llama3.2:3b
+ollama pull nomic-embed-text
+```
+
+### Start with Compose
+
+```bash
+docker compose up --build -d
+```
+
+Open http://localhost:8000 in your browser.
+
+### Stop
+
+```bash
+docker compose down
+```
+
+### Notes
+
+- Container sets `OLLAMA_HOST=http://host.docker.internal:11434`.
+- Journal data is persisted via `./data:/app/data`.
+- If your Linux Docker setup cannot resolve `host.docker.internal`, replace it with your host IP and keep port `11434` reachable.
+
 ## How It Works
 
 ```
