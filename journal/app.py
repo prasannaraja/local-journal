@@ -1,4 +1,5 @@
 import json
+import os
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, StreamingResponse, JSONResponse
@@ -13,6 +14,13 @@ app = FastAPI(title="Local LLM Journal")
 # In-memory session store for active brain dump conversations
 _sessions: dict[str, dict] = {}
 
+# Active UI version directory.
+_ui_version = os.getenv("JOURNAL_UI_VERSION", "v2.0")
+_ui_dir = STATIC_DIR / _ui_version
+if not _ui_dir.exists():
+    fallback_dir = STATIC_DIR / "v1.0"
+    _ui_dir = fallback_dir if fallback_dir.exists() else STATIC_DIR
+
 
 @app.on_event("startup")
 def startup():
@@ -21,12 +29,12 @@ def startup():
 
 
 # --- Static files ---
-app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+app.mount("/static", StaticFiles(directory=str(_ui_dir)), name="static")
 
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
-    return (STATIC_DIR / "index.html").read_text()
+    return (_ui_dir / "index.html").read_text()
 
 
 # --- Health ---
