@@ -9,6 +9,18 @@ from journal.config import STATIC_DIR, DATA_DIR
 from journal import db, embeddings, brain_dump, search
 from journal.llm import health_check
 
+
+class NoCacheStaticFiles(StaticFiles):
+    """Static files are keyed by a fixed /static URL regardless of which UI
+    version is mounted, so browsers must revalidate on every request instead
+    of reusing a cached response from a previously active version."""
+
+    async def get_response(self, path, scope):
+        response = await super().get_response(path, scope)
+        response.headers["Cache-Control"] = "no-cache"
+        return response
+
+
 app = FastAPI(title="Local LLM Journal")
 
 # In-memory session store for active brain dump conversations
@@ -29,12 +41,15 @@ def startup():
 
 
 # --- Static files ---
-app.mount("/static", StaticFiles(directory=str(_ui_dir)), name="static")
+app.mount("/static", NoCacheStaticFiles(directory=str(_ui_dir)), name="static")
 
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
-    return (_ui_dir / "index.html").read_text()
+    return HTMLResponse(
+        (_ui_dir / "index.html").read_text(),
+        headers={"Cache-Control": "no-cache"},
+    )
 
 
 # --- Health ---
