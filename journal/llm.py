@@ -14,15 +14,21 @@ def health_check() -> bool:
         return False
 
 
-def chat(messages: list[dict], model: str = CHAT_MODEL) -> str:
+def chat(messages: list[dict], model: str = CHAT_MODEL, options: dict | None = None) -> str:
     """Send messages and return the full response text."""
-    response = ollama.chat(model=model, messages=messages)
+    kwargs = {"model": model, "messages": messages}
+    if options:
+        kwargs["options"] = options
+    response = ollama.chat(**kwargs)
     return response.message.content
 
 
-def chat_stream(messages: list[dict], model: str = CHAT_MODEL):
+def chat_stream(messages: list[dict], model: str = CHAT_MODEL, options: dict | None = None):
     """Stream chat response, yielding content chunks."""
-    for chunk in ollama.chat(model=model, messages=messages, stream=True):
+    kwargs = {"model": model, "messages": messages, "stream": True}
+    if options:
+        kwargs["options"] = options
+    for chunk in ollama.chat(**kwargs):
         text = chunk.message.content
         if text:
             yield text

@@ -1,7 +1,7 @@
 import re
 
 from journal.config import PROMPTS_DIR
-from journal.llm import chat_stream
+from journal.llm import chat, chat_stream
 
 
 def _load_prompt(name: str) -> str:
@@ -35,11 +35,37 @@ def polish_entry(messages: list[dict]):
         elif msg["role"] == "assistant":
             conversation_text += f"Companion: {msg['content']}\n\n"
 
+    # Pass 1: extract a faithful detail map so the final pass misses fewer specifics.
+    extraction_messages = [
+        {
+            "role": "system",
+            "content": (
+                "Extract a faithful detail map from the conversation. "
+                "Do not summarize away specifics. "
+                "Return plain text with these sections: "
+                "Timeline, Emotions, Motivations, Decisions, Unresolved Questions, Exact User Phrases. "
+                "Only include facts present in the conversation."
+            ),
+        },
+        {
+            "role": "user",
+            "content": f"Conversation:\n\n{conversation_text}",
+        },
+    ]
+    detail_map = chat(extraction_messages, options={"num_ctx": 8192})
+
     polish_messages = [
         {"role": "system", "content": system},
-        {"role": "user", "content": f"Here is the conversation:\n\n{conversation_text}\n\nPlease write the polished journal entry."},
+        {
+            "role": "user",
+            "content": (
+                f"Here is the conversation:\n\n{conversation_text}\n\n"
+                f"Here is a faithful detail map extracted from it:\n\n{detail_map}\n\n"
+                "Please write the polished journal entry."
+            ),
+        },
     ]
-    return chat_stream(polish_messages)
+    return chat_stream(polish_messages, options={"num_ctx": 8192})
 
 
 def parse_polished_entry(text: str) -> dict:

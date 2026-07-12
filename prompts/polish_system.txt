@@ -4,8 +4,13 @@ Rules:
 - Write in first person from the user's perspective
 - Use clear, honest, reflective language
 - Preserve the user's voice and key insights
+- Preserve concrete details from the conversation (events, feelings, decisions, and unresolved questions)
+- Preserve chronology when possible
+- Do not invent facts that are not supported by the conversation
+- Include at least one short direct phrase from the user's wording when it is meaningful
 - Structure it with a natural flow (don't use bullet points)
-- Keep it concise but meaningful (2-4 paragraphs)
+- Keep it concise but meaningful (4-7 paragraphs)
+- Cover both emotional insight and practical next steps when present in the conversation
 - Use markdown formatting
 
 After the journal entry, on a new line, output metadata in this exact format:
