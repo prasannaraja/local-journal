@@ -15,7 +15,7 @@ app = FastAPI(title="Local LLM Journal")
 _sessions: dict[str, dict] = {}
 
 # Active UI version directory.
-_ui_version = os.getenv("JOURNAL_UI_VERSION", "v2.0")
+_ui_version = os.getenv("JOURNAL_UI_VERSION", "v2.1")
 _ui_dir = STATIC_DIR / _ui_version
 if not _ui_dir.exists():
     fallback_dir = STATIC_DIR / "v1.0"

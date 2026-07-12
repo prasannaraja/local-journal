@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <script>
+        (function () {
+            var saved = localStorage.getItem('theme');
+            if (saved === 'light' || saved === 'dark') {
+                document.documentElement.setAttribute('data-theme', saved);
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div class="shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="brand-mark">J</span>
+                <div class="brand-text">
+                    <h1>Journal</h1>
+                    <p>local &amp; private</p>
+                </div>
+                <button id="btn-collapse" class="collapse-btn" aria-label="Collapse sidebar" title="Collapse sidebar">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M15 5 8 12l7 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+            </div>
+
+            <nav class="nav">
+                <button class="nav-item active" data-tab="dump" title="Brain Dump">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M12 20h9" stroke-width="1.8" stroke-linecap="round"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                    <span>Brain Dump</span>
+                </button>
+                <button class="nav-item" data-tab="search" title="Search">
+                    <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke-width="1.8"/><path d="m20 20-3.5-3.5" stroke-width="1.8" stroke-linecap="round"/></svg>
+                    <span>Search</span>
+                </button>
+                <button class="nav-item" data-tab="browse" title="Entries">
+                    <svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="4" width="17" height="16" rx="2.2" stroke-width="1.8"/><path d="M3.5 9h17" stroke-width="1.8"/></svg>
+                    <span>Entries</span>
+                </button>
+            </nav>
+
+            <button id="btn-expand" class="expand-btn" aria-label="Expand sidebar" title="Expand sidebar">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+
+            <div class="sidebar-foot">
+                <button id="btn-theme" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+                    <svg class="icon-sun" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.5" stroke-width="1.8"/><path d="M12 2.5v2.5M12 19v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M2.5 12H5M19 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8" stroke-width="1.8" stroke-linecap="round"/></svg>
+                    <svg class="icon-moon" viewBox="0 0 24 24" fill="none"><path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11Z" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                    <span class="theme-text">Theme</span>
+                </button>
+                <div id="health-status" class="health">
+                    <span class="dot"></span>
+                    <span class="health-text">Checking…</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <section id="tab-dump" class="view">
+                <div id="dump-input" class="card hero-card">
+                    <div class="card-head">
+                        <div>
+                            <span class="eyebrow">Step 1 of 3</span>
+                            <h2>What's on your mind?</h2>
+                        </div>
+                    </div>
+                    <p class="subtext">Write freely, don't edit as you go — you'll get a chance to reflect and polish it after.</p>
+                    <textarea id="raw-dump" placeholder="Start typing…" rows="10"></textarea>
+                    <div class="actions">
+                        <button id="btn-start" class="btn btn-primary">
+                            Start Reflection
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="dump-chat" class="card hidden">
+                    <div class="card-head">
+                        <div>
+                            <span class="eyebrow">Step 2 of 3</span>
+                            <h2>Let's reflect together</h2>
+                        </div>
+                    </div>
+                    <div id="chat-messages"></div>
+                    <div class="chat-input-row">
+                        <input type="text" id="chat-reply" placeholder="Type your reply…" autocomplete="off">
+                        <button id="btn-reply" class="btn btn-primary btn-icon" aria-label="Send" title="Send">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <button id="btn-done" class="btn btn-secondary">I'm done</button>
+                    </div>
+                </div>
+
+                <div id="dump-review" class="card hidden">
+                    <div class="card-head">
+                        <div>
+                            <span class="eyebrow">Step 3 of 3</span>
+                            <h2>Your polished entry</h2>
+                        </div>
+                        <button id="btn-edit-toggle" class="btn btn-ghost btn-sm">Edit</button>
+                    </div>
+                    <div id="polished-preview" class="entry-preview"></div>
+                    <textarea id="polished-edit" rows="12" class="hidden"></textarea>
+                    <div class="actions">
+                        <button id="btn-save" class="btn btn-primary">Save Entry</button>
+                        <button id="btn-new" class="btn btn-ghost">Start Over</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-search" class="view hidden">
+                <div class="card">
+                    <div class="card-head">
+                        <div>
+                            <span class="eyebrow">Ask anything</span>
+                            <h2>Search your journal</h2>
+                        </div>
+                    </div>
+                    <div class="search-bar">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke-width="1.8"/><path d="m20 20-3.5-3.5" stroke-width="1.8" stroke-linecap="round"/></svg>
+                        <input type="text" id="search-query" placeholder="What have I learned recently about patience?">
+                        <button id="btn-search" class="btn btn-primary">Search</button>
+                    </div>
+                    <div id="search-results" class="hidden">
+                        <div id="search-refs"></div>
+                        <div id="search-answer" class="entry-preview"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-browse" class="view hidden">
+                <div class="card">
+                    <div class="card-head">
+                        <div>
+                            <span class="eyebrow">Archive</span>
+                            <h2>All entries</h2>
+                        </div>
+                    </div>
+                    <div id="entries-list"></div>
+                    <div id="entry-detail" class="hidden"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
